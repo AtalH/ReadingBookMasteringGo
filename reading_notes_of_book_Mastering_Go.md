@@ -31,7 +31,7 @@
     - go 中通过 os.Stdin os.Stdout os.Stderr 访问
     - 运行程序时，2>&1 表示将标准错误打印到标准输出，>/dev/null 2>&1 表示将标准输入和标准错误都重定向到 /dev/null 设备
 - 程序中获取运行时的命令行参数
-    
+  
     - main方法中， args := os.Args，定义一个数组来获取，第一个值是程序名称
 - 日志
     - go 中使用 Unix 系统日志服务，一般的日志在 /var/log 文件夹中，当然这个可以配置 
@@ -157,13 +157,102 @@
 - 对于不了解的 go 特性，先测试再使用
 - 不要怕犯错，勇于探索
 ## chapter 3 基本数据结构
+
 ### array
 - 过
 ### slice
 - 常用 slice 少用 array
 - slice 也可以是多维的
-- copy(dst, src)，长度不同时，安小的来
+- copy(dst, src)，长度不同时，按小的来
 - 排序 sort.Slice()，new in go 1.8
 ### map
-- 不要使用 float 型做 key，因为浮点型数有比较问题
+- 不要使用 float 型做 key，因为浮点型数有 == 比较问题
 - 对零值 nil 的 map 执行添加键值会报错，但 len() delete() range 操作不会报错
+
+- 判断一个 key 存不存在，不能简单通过 map["key"] 的 value 返回值判断，要通过第二个返回参数判断，因为当 key 不存在时，返回的 value 是零值，比如 int 型返回 0 时就无法判断。
+
+  ```go
+  _, ok = map["key"]
+  if ok {
+      fmt.Println("key exists")
+  }
+  ```
+
+### constant
+
+- 常量是在编译器就确定值的
+
+- go 使用 Boolean、string、number 作为常量的类型，能够在处理时有更多的可拓展性
+
+- 定义常量时，如果不指定类型，使用时能够自动类型转换
+
+  ```go
+  const s1 = 123
+  var v1 float32 = s1 * 12
+  ```
+
+- iota 略
+
+### pointer
+
+- 使用 & 取得变量的内存地址赋给指针变量
+- 指针变量通过 * 取得内存地址的变量的值
+- go 中 string 是指类型，c 中是指针类型
+
+### date time
+
+- epoch time  是指 1970 年 1 月 1日至今经过的秒数
+
+  ```go
+  //BasicUse shows use basic of date time
+  func BasicUse()  {
+  	fmt.Println("epoch time:", time.Now.Unix())
+  	t := time.Now()
+  	fmt.Println(t, t.Format(time.RFC3339))
+  	fmt.Println(t.Weekday, t.Date, t.Month, t.Year)
+  
+  	// sleep 2 seconds
+  	time.Sleep(time.Second * 2)
+  
+  	t1 := time.Now()
+  	fmt.Println("time diff:", t1.Sub(t))
+  }
+  ```
+
+- 格式化
+
+  | go 格式             | 其他语言格式 | 说明                     |
+  | ------------------- | ------------ | ------------------------ |
+  | 2006                | yyyy         | 4 位年份表示法           |
+  | 01                  | MM           | 2 位月份表示法           |
+  | 02                  | dd           | 2 位日表示法             |
+  | 03                  | hh           | 12 小时制小时表示法      |
+  | 15                  | HH           | 24小时制小时表示法       |
+  | 04                  | mm           | 2 位分钟表示法           |
+  | 05                  | ss           | 2 位秒表示法             |
+  | -0700               |              | 时区                     |
+  | Mon                 |              | 3 位缩写字母的星期表示法 |
+  | Monday              |              | 全单词的星期表示法       |
+  | 1                   |              | 月                       |
+  | 2                   |              | 日                       |
+  | 3、3pm、03AM        |              | 时                       |
+  | 4                   |              | 分                       |
+  | 5                   |              | 秒                       |
+  | 06                  |              | 2 位年份                 |
+  | -07、-0700、Z0700   |              | 时区                     |
+  | Z07:00、-07:00、MST |              | 时区                     |
+
+  
+
+  ```go
+  func formating() {
+  	t := time.Now()
+  	cnDateFormatPattern := "2006/01/02 15:04:05 -0700"
+  	fmt.Println("CN Date Formating:", t.Format(cnDateFormatPattern))
+      // output--> CN Date Formating:2020/05/17 12:49:56 +0800
+  }
+  ```
+
+  
+
+​	
