@@ -22,6 +22,7 @@
 # Ignore temp directory.
 /typo3temp/
 
+.vscode/
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

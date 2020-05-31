@@ -253,6 +253,69 @@
   }
   ```
 
-  
+## Chapter 4
+### 结构体 Struct
+- 方法内也可以定义结构体
+- 将一个结构体赋值给数组时，会对结构体进行拷贝进数组，值拷贝
+    ```go
+    type person struct {
+        name string
+    }
+    p := [1]persion{}
+    p1 := person{name:"hh"}
+    // 拷贝
+    p[1] = p1
+    ```
+- 使用 new 创建结构体实例，new 返回的是内存地址，会给实例赋零值，但没有初始化
+    ```go
+    p2 := new(person)
+    // 切片
+    p3 := new([]person)
+    ```
+- 只能应用与 map、channel、slice 的 make 返回的不是内存地址
+### 元组 tuple
+- go 中的元组主要使用在支持多返回值方面
+- 不支持定义元组，但支持元组的使用
+- 通过元组，能够不需要临时变量进行交换变量的值
+    ```go
+    v1, v2 = v2, v1
+    ```
+
+### 正则表达式与模式匹配
+    ```go
+    import (
+    	"fmt"
+    	"regexp"
+    )
+    
+    func regexDemo() {
+    	regex := regexp.MustCompile("[1-5a-c]")
+    	test := "15isbd4"
+    	if regex.MatchString(test) {
+    		match := regex.FindStringSubmatch(test)
+    		fmt.Println("match:", match)
+    	}
+    	match := regex.FindAllString(test, -1)
+    	fmt.Println("match:", match)
+    }
+    
+    func main() {
+    	regexDemo()
+    }
+    ```
+
+### 字符串
+- go 中的字符串是值而不是指针
+#### 番外
+- 字符集与编码
+- 编码 Character Set
+    - 一开始只有 ASCII 编码，计算机用 1 字节存储一个字符，共 127 个。
+    - 之后各个国家地区对 ASCII 编码扩展，比如中国的 GBK、GB2312、GB18030，使用双字节存储一个汉字，这就是“一个汉字算两个英文字符”的由来
+    - 各个地区自己的编码的不通用的，于是为了统一全世界的编码，ISO 制定了unicode: Universal Multiple-Octet Coded Character Set
+    - unicode 规定的只是字符与二进制数的对应关系
+    - unicode 至少使用 16 位表示一个字符，对于只是英文的字符来说，这样存储的话，高字节就全是 0，浪费空间，但是“一个汉字算两个英文字符”也不再成立
+- 编码 encoding    
+    - UTF 编码方案，就是将 unicode 字符集与计算机字节（存储与传输）之间的编解码方案，使用高位比特表示字节数，能够动态的按照字符占用存储空间，常用的就是 UTF-8
+    - UTF-8 的缺点，如果要计算有多少个字符，需要遍历
 
 ​	
